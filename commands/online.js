@@ -47,7 +47,7 @@ module.exports = {
           .setThumbnail(`https://mc-heads.net/head/${targetPlayer}/3d`)
           .setDescription(`⚠️ **${serverMessage}**`)
           .setTimestamp()
-          .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
+          .setFooter({ text: 'KingMC.vn Stats Bot • By Kian Nguyen' });
 
         await interaction.editReply({ embeds: [embed] });
       }
