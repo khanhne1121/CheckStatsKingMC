@@ -61,7 +61,7 @@ module.exports = {
         }
       )
       .setTimestamp()
-      .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
+      .setFooter({ text: 'KingMC.vn Stats Bot • By Kian Nguyen' });
 
     if (interaction.editReply) {
       await interaction.editReply({ embeds: [embed] });
