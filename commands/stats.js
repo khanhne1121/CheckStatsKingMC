@@ -32,7 +32,7 @@ module.exports = {
         .setColor('#2b2d31')
         .setThumbnail(`https://mc-heads.net/head/${targetPlayer}/3d`)
         .setTimestamp()
-        .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
+        .setFooter({ text: 'KingMC.vn Stats Bot • By Kian Nguyen' });
 
       const validItems = (result.items || []).filter(item => !isDecorationItem(item));
 
