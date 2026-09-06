@@ -117,7 +117,7 @@ module.exports = {
         .setDescription(`Không thể lấy danh sách AH cho **${itemQuery}**.\n\n⚠️ Đã có lỗi xảy ra trong quá trình xử lý yêu cầu. Vui lòng thử lại sau hoặc bấm nút **Báo lỗi** bên dưới để gửi thông báo tới Admin!`)
         .setColor('#ef4444')
         .setTimestamp()
-        .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
+        .setFooter({ text: 'KingMC.vn Stats Bot • By Kian Nguyen' });
         
       const row = new ActionRowBuilder()
         .addComponents(
