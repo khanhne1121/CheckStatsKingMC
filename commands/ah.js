@@ -38,7 +38,7 @@ module.exports = {
           .setDescription(`⚠️ Không có vật phẩm nào trên AH cho **${itemDisplayName}**.`)
           .setColor('#ef4444')
           .setTimestamp()
-          .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
+          .setFooter({ text: 'KingMC.vn Stats Bot • By Kian Nguyen' });
 
         return await interaction.editReply({ embeds: [emptyEmbed] });
       }
