@@ -67,7 +67,7 @@ module.exports = {
           .setDescription(aiReply)
           .setColor(usedWebSearch ? '#10b981' : '#3b82f6')
           .setTimestamp()
-          .setFooter({ text: `Powered by Groq AI ${usedWebSearch ? '• 🌐 Đã tra cứu Internet' : ''} • Thiết kế bởi BinhLH` });
+          .setFooter({ text: `Powered by Groq AI ${usedWebSearch ? '• 🌐 Đã tra cứu Internet' : ''} • By Kian Nguyen` });
 
         await interaction.editReply({ embeds: [embed] });
       } else {
