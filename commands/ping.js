@@ -69,7 +69,7 @@ module.exports = {
       .setColor('#2b2d31')
       .setDescription(`\`\`\`text\n${lines}\n\`\`\``)
       .setTimestamp()
-      .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
+      .setFooter({ text: 'KingMC.vn Stats Bot • By Kian Nguyen' });
 
     if (interaction.editReply) {
       await interaction.editReply({ embeds: [embed] });
