@@ -38,7 +38,7 @@ module.exports = {
           .setDescription(`⚠️ Không có order (đơn hàng) nào cho **${itemDisplayName}**.`)
           .setColor('#ef4444')
           .setTimestamp()
-          .setFooter({ text: 'KingMC.vn Stats Bot • By Kian Nguyen' });
+          .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
 
         return await interaction.editReply({ embeds: [emptyEmbed] });
       }
@@ -47,7 +47,7 @@ module.exports = {
       const displayMode = configHelper.getDisplayMode();
       const emoji = getCustomEmoji(itemQuery);
 
-      // CHẾ ĐỘ RENDER ẢNH (Image Mode) - Giống như trong ảnh
+      // CHẾ ĐỘ RENDER ẢNH (Image Mode)
       if (displayMode === 'image') {
         let imageBuffer = null;
         let lastError = null;
@@ -81,88 +81,46 @@ module.exports = {
         console.error('[Discord-Bot] Render ảnh Order thất bại sau 2 lần thử:', lastError?.message);
       }
 
-      // CHẾ ĐỘ VĂN BẢN (Text Mode) - Định dạng như bảng đơn giản
-      // Tạo tiêu đề bảng
-      let tableHeader = '```\n';
-      tableHeader += `📋 DANH SÁCH ORDER: ${itemQuery.toUpperCase()}\n`;
-      tableHeader += `${'─'.repeat(50)}\n`;
-      tableHeader += `#  ITEM                    GIÁ\n`;
-      tableHeader += `${'─'.repeat(50)}\n`;
-      
-      // Tạo nội dung bảng
-      let tableContent = '';
-      orders.forEach((order, index) => {
+      // CHẾ ĐỘ VĂN BẢN (Text Mode)
+      const embed = new EmbedBuilder()
+        .setTitle(`📦 Danh sách đơn hàng: **${itemQuery.toUpperCase()}** ${emoji}`)
+        .setColor('#2b2d31')
+        .setTimestamp()
+        .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
+
+      const formattedLines = orders.map((order, index) => {
         const priceText = order.price || 'N/A';
         const cleanDisplay = (order.displayName || '').replace(/§[0-9a-fk-or]/gi, '').trim();
         const rawName = order.itemName || order.name;
-        
-        // Xác định tên item hiển thị
-        let itemName = '';
-        if (cleanDisplay && !/^(?:đơn\s*hàng|don\s*hang|order)/iu.test(cleanDisplay) && cleanDisplay !== 'Item' && cleanDisplay !== 'Vật phẩm') {
-          itemName = cleanDisplay;
-        } else if (rawName && rawName !== 'player_head' && rawName !== 'skull' && rawName !== 'air') {
-          itemName = rawName;
+        const isOrderTitle = /^(?:đơn\s*hàng|don\s*hang|order)/iu.test(cleanDisplay);
+
+        let itemQueryId = '';
+        if (rawName && rawName !== 'player_head' && rawName !== 'skull' && rawName !== 'air') {
+          itemQueryId = rawName;
         } else {
-          itemName = itemQuery;
+          itemQueryId = itemQuery;
         }
-        
-        // Cắt tên item nếu quá dài để hiển thị đẹp
-        if (itemName.length > 22) {
-          itemName = itemName.substring(0, 20) + '..';
+
+        const nameToShow = (cleanDisplay && !isOrderTitle && cleanDisplay !== 'Item' && cleanDisplay !== 'Vật phẩm')
+          ? cleanDisplay
+          : formatItemDisplayName(itemQueryId);
+
+        let buyerName = order.buyer;
+        if (!buyerName || buyerName === 'Ẩn danh' || /^(?:đơn\s*hàng|don\s*hang|order)/iu.test(buyerName)) {
+          buyerName = cleanDisplay.replace(/^(?:đơn\s*hàng|don\s*hang|order)?(?:\s*của|\s*cua|:|\s)*\s*/iu, '').trim();
         }
-        
-        // Định dạng số (thêm dấu chấm phân cách)
-        const formattedPrice = priceText.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        
-        // Thêm dòng vào bảng
-        const itemStr = `#${String(index + 1).padStart(2)}  ${itemName.padEnd(22)} ${formattedPrice.padStart(15)}`;
-        tableContent += itemStr + '\n';
+
+        const buyerText = (buyerName && buyerName !== 'Ẩn danh') ? ` (Người mua: **${buyerName}**)` : '';
+        return `📦 **#${index + 1}** **${nameToShow}**${buyerText} | Giá: **${priceText}**`;
       });
-      
-      // Đóng bảng
-      const tableFooter = `${'─'.repeat(50)}\n`;
-      const tableEnd = '```';
-      
-      // Kết hợp tất cả
-      let fullTable = tableHeader + tableContent + tableFooter + tableEnd;
-      
-      // Kiểm tra giới hạn ký tự của Discord (2000 ký tự)
-      if (fullTable.length > 2000) {
-        // Nếu quá dài, chỉ hiển thị 15 order đầu
-        const limitedOrders = orders.slice(0, 15);
-        let limitedContent = '';
-        limitedOrders.forEach((order, index) => {
-          const priceText = order.price || 'N/A';
-          const cleanDisplay = (order.displayName || '').replace(/§[0-9a-fk-or]/gi, '').trim();
-          const rawName = order.itemName || order.name;
-          
-          let itemName = '';
-          if (cleanDisplay && !/^(?:đơn\s*hàng|don\s*hang|order)/iu.test(cleanDisplay) && cleanDisplay !== 'Item' && cleanDisplay !== 'Vật phẩm') {
-            itemName = cleanDisplay;
-          } else if (rawName && rawName !== 'player_head' && rawName !== 'skull' && rawName !== 'air') {
-            itemName = rawName;
-          } else {
-            itemName = itemQuery;
-          }
-          
-          if (itemName.length > 22) {
-            itemName = itemName.substring(0, 20) + '..';
-          }
-          
-          const formattedPrice = priceText.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-          const itemStr = `#${String(index + 1).padStart(2)}  ${itemName.padEnd(22)} ${formattedPrice.padStart(15)}`;
-          limitedContent += itemStr + '\n';
-        });
-        
-        fullTable = tableHeader + limitedContent + `\n... và ${orders.length - 15} order khác\n` + tableFooter + tableEnd;
+
+      let descriptionText = formattedLines.join('\n');
+
+      if (descriptionText.length > 4096) {
+        descriptionText = descriptionText.substring(0, 4080) + '...';
       }
 
-      // Tạo embed với bảng đã định dạng
-      const embed = new EmbedBuilder()
-        .setDescription(fullTable)
-        .setColor('#2b2d31')
-        .setTimestamp()
-        .setFooter({ text: `KingMC.vn Stats Bot • Thiết kế bởi BinhLH • Tổng: ${orders.length} order` });
+      embed.setDescription(descriptionText);
 
       await interaction.editReply({ embeds: [embed] });
 
@@ -175,7 +133,7 @@ module.exports = {
         .setDescription(`Không thể lấy danh sách đơn hàng cho **${itemQuery}**.\n\n⚠️ Đã có lỗi xảy ra trong quá trình xử lý yêu cầu. Vui lòng thử lại sau hoặc bấm nút **Báo lỗi** bên dưới để gửi thông báo tới Admin!`)
         .setColor('#ef4444')
         .setTimestamp()
-        .setFooter({ text: 'KingMC.vn Stats Bot • Kian Nguyen' });
+        .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
         
       const row = new ActionRowBuilder()
         .addComponents(
