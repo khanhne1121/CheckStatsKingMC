@@ -86,7 +86,7 @@ module.exports = {
         .setTitle(`📦 Danh sách AH: **${itemQuery.toUpperCase()}** ${emoji}`)
         .setColor('#2b2d31')
         .setTimestamp()
-        .setFooter({ text: 'KingMC.vn Stats Bot • Thiết kế bởi BinhLH' });
+        .setFooter({ text: 'KingMC.vn Stats Bot • By Kian' });
 
       const formattedLines = items.map((item, index) => {
         const priceText = item.price || 'N/A';
